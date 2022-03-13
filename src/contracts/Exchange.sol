@@ -79,11 +79,6 @@ contract Exchange {
 		uint256 timestamp;
 	}
 
-	// a way to store the order
-
-
-	// add the order to storage
-
 
 	constructor (address _feeAccount, uint256 _feePercent) public {
 		feeAccount = _feeAccount;
@@ -108,7 +103,6 @@ contract Exchange {
 	}
 
 	function depositToken(address _token, uint256 _amount) public {
-		// TODO: Don't allow Ether deposits
 		require(_token != ETHER);
 
 		// Send tokens to this contract
@@ -138,7 +132,7 @@ contract Exchange {
 		orderCount = orderCount.add(1);
 		orders[orderCount] = _Order(orderCount, msg.sender, _tokenGet, _amountGet, _tokenGive, _amountGive, now);
 		emit Order(orderCount, msg.sender, _tokenGet, _amountGet, _tokenGive, _amountGive, now);
-	}
+	}	
 
 	function cancelOrder(uint256 _id) public {
 		_Order storage _order = orders[_id];
@@ -168,7 +162,7 @@ contract Exchange {
 	function _trade(uint256 _orderId, address _user, address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) internal {
 		// Fee paid by the user that fills the order => msg.sender
 		// Fee deducted from _amountGet
-		uint256 _feeAmount = _amountGive.mul(feePercent).div(100);
+		uint256 _feeAmount = _amountGet.mul(feePercent).div(100);
 
 		// Execute the trade
 		// Chages fees
@@ -182,8 +176,4 @@ contract Exchange {
 		// Emit trade event
 		emit Trade(_orderId, _user, _tokenGet, _amountGet, _tokenGive, _amountGive, msg.sender, now);
 	}
-
 }
-
-
-
